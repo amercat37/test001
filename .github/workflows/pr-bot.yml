@@ -49,3 +49,9 @@ jobs:
               issue_number: context.issue.number,
               body: 'Bot decision: human review is required.'
             })
+
+      - name: Block high-risk change
+        if: env.LOW_RISK != 'true'
+        run: |
+          echo "High-risk change requires human review."
+          exit 1
