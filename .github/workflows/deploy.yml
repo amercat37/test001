@@ -9,5 +9,5 @@ jobs:
     environment: production
 
     steps:
-      - name: Deploy
-        run: echo "Deploying to production"
+      - name: Show deployment message
+        run: echo "${{ secrets.DEPLOY_MESSAGE }}"
