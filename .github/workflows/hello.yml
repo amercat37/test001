@@ -1,13 +1,17 @@
-name: Hello GitHub Actions
+name: Validate Pull Request
 
 on:
   workflow_dispatch:
   pull_request:
 
 jobs:
-  hello:
+  validate:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Say hello
-        run: echo "Hello from GitHub Actions"
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Validate README contains required text
+        run: |
+          grep -q "Testing pull request automation." README.md
