@@ -1,13 +1,24 @@
-name: Production Deployment
+name: Environment Deployment
 
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        description: Choose environment
+        required: true
+        type: choice
+        options:
+          - dev
+          - production
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: production
+    environment: ${{ inputs.environment }}
 
     steps:
-      - name: Show deployment message
+      - name: Show selected environment
+        run: echo "Deploying to ${{ inputs.environment }}"
+
+      - name: Show environment secret
         run: echo "${{ secrets.DEPLOY_MESSAGE }}"
