@@ -23,8 +23,10 @@ jobs:
 
       - name: Low-risk decision
         if: env.LOW_RISK == 'true'
-        run: echo "Bot decision: low-risk change can continue automatically."
+        run: |
+          echo "Bot decision: low-risk change can continue automatically."
 
       - name: Human-review decision
         if: env.LOW_RISK != 'true'
-        run: echo "Bot decision: human review is required."
+        run: |
+          echo "Bot decision: human review is required."
