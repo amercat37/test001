@@ -4,6 +4,11 @@ on:
   pull_request:
     types: [opened, edited, synchronize, reopened]
 
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
 jobs:
   classify:
     runs-on: ubuntu-latest
@@ -21,12 +26,26 @@ jobs:
             echo "LOW_RISK=false" >> "$GITHUB_ENV"
           fi
 
-      - name: Low-risk decision
+      - name: Comment low-risk decision
         if: env.LOW_RISK == 'true'
-        run: |
-          echo "Bot decision: low-risk change can continue automatically."
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: 'Bot decision: low-risk change can continue automatically.'
+            })
 
-      - name: Human-review decision
+      - name: Comment human-review decision
         if: env.LOW_RISK != 'true'
-        run: |
-          echo "Bot decision: human review is required."
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: 'Bot decision: human review is required.'
+            })
