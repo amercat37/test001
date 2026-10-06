@@ -1,0 +1,30 @@
+name: PR Approval Bot
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  classify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check PR title
+        run: |
+          TITLE="${{ github.event.pull_request.title }}"
+
+          echo "PR title: $TITLE"
+
+          if [[ "$TITLE" == low-risk:* ]]; then
+            echo "LOW_RISK=true" >> "$GITHUB_ENV"
+          else
+            echo "LOW_RISK=false" >> "$GITHUB_ENV"
+          fi
+
+      - name: Low-risk decision
+        if: env.LOW_RISK == 'true'
+        run: echo "Bot decision: low-risk change can continue automatically."
+
+      - name: Human-review decision
+        if: env.LOW_RISK != 'true'
+        run: echo "Bot decision: human review is required."
